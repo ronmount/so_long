@@ -1,0 +1,46 @@
+NAME = so_long
+
+CC = gcc ${CFLAGS}
+CFLAGS = -Wall -Wextra -Werror
+
+SRC = src_bonus/main_bonus.c \
+src_bonus/get_next_line_bonus.c \
+src_bonus/get_next_line_utils_bonus.c \
+src_bonus/map_parser_bonus.c \
+src_bonus/utils_bonus.c \
+src_bonus/error_manager_bonus.c \
+src_bonus/init_everything_bonus.c \
+src_bonus/draw_everything_bonus.c \
+src_bonus/draw2_bonus.c \
+src_bonus/parser_stuff_bonus.c
+
+
+MLX = libmlx.dylib
+MLX_PATH = mlx
+
+
+OBJS =		$(SRC:.c=.o)
+RM =	rm -f
+
+%.o: %.c so_long_bonus.h
+	@$(CC) -I$(MLX_PATH) -c $< -o $@
+
+all:	$(NAME)
+
+$(NAME): 	$(OBJS) $(MLX)
+			@$(CC) -L$(MLX_PATH) -lmlx -framework Metal -framework AppKit $(OBJS) -o $(NAME)
+
+$(MLX):
+		@make -C $(MLX_PATH)/
+		@@cp $(MLX_PATH)/libmlx.dylib libmlx.dylib
+
+clean:
+	@$(RM) $(OBJS) $(MLX)
+	@make clean -C $(MLX_PATH)
+
+fclean: clean
+		@$(RM) $(NAME)
+
+re: 	fclean all
+
+.PHONY: $(MLX) clean fclean re all $(NAME)
